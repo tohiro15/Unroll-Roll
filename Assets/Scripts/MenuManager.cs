@@ -5,9 +5,17 @@ public class MenuManager : MonoBehaviour
 {
     public List<Canvas> menus = new List<Canvas>();
     public int defaultMenuIndex = 0;
+    public AudioSource uiAudioSource;
+    public AudioClip buttonClickSound;
 
     private void Start()
     {
+        if (uiAudioSource == null)
+        {
+            uiAudioSource = gameObject.AddComponent<AudioSource>();
+            uiAudioSource.playOnAwake = false;
+        }
+
         SetActiveMenu(defaultMenuIndex);
     }
 
@@ -18,6 +26,8 @@ public class MenuManager : MonoBehaviour
             Debug.LogError("Invalid menu index!");
             return;
         }
+
+        PlayButtonSound();
 
         for (int i = 0; i < menus.Count; i++)
         {
@@ -33,6 +43,15 @@ public class MenuManager : MonoBehaviour
             return;
         }
 
+        PlayButtonSound();
         menus[menuIndex].gameObject.SetActive(!menus[menuIndex].gameObject.activeSelf);
+    }
+
+    private void PlayButtonSound()
+    {
+        if (uiAudioSource != null && buttonClickSound != null)
+        {
+            uiAudioSource.PlayOneShot(buttonClickSound);
+        }
     }
 }
