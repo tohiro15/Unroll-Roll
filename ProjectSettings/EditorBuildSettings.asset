@@ -8,13 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Shop.unity
     guid: f4f9742f7fc40da4798595d5c2837ce4
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Mummy.unity
     guid: 1dc66404bbeb3224d88a591bee312a41
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Burial Chamber.unity
     guid: 8863a1b144c3d434bb5c9636cc3446f3
   m_configObjects:

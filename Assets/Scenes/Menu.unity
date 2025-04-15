@@ -4653,6 +4653,18 @@ PrefabInstance:
       propertyPath: _paperCounterText
       value: 
       objectReference: {fileID: 555930516}
+    - target: {fileID: 6843713036966662997, guid: b14ba8109afaa3146b09c8b34367f997, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843713036966662997, guid: b14ba8109afaa3146b09c8b34367f997, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6843713036966662997, guid: b14ba8109afaa3146b09c8b34367f997, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7147455804204475589, guid: b14ba8109afaa3146b09c8b34367f997, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
