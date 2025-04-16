@@ -20,7 +20,6 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
 
     #region Private Fields
     private Queue<GameObject> _activePapers = new Queue<GameObject>();
-    private float _paperLength;
     private Vector2 _startTouchPosition;
     private bool _isDragging = false;
     private bool _swipeCounted = false;
@@ -29,7 +28,6 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
     #region Unity Methods
     private void Start()
     {
-        LoadPaperLength();
         UpdateUI();
         _interactionArea ??= GetComponent<RectTransform>();
     }
@@ -107,7 +105,7 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
         paperRect.sizeDelta = new Vector2(paperRect.sizeDelta.x, 0f);
         paperRect.anchoredPosition = new Vector2(0, 0);
 
-        paperRect.DOSizeDelta(new Vector2(paperRect.sizeDelta.x, 200f), 1f).SetEase(Ease.OutSine);
+        paperRect.DOSizeDelta(new Vector2(paperRect.sizeDelta.x, 100f), 0.5f).SetEase(Ease.OutSine);
 
         StartCoroutine(ScrollToBottomNextFrame());
     }
@@ -143,20 +141,15 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
 
     private void UnrollPaper()
     {
-        _paperLength += _paperPerSwipe;
-        SavePaperLength();
+        PaperCurrencyManager.Instance.AddPaper(_paperPerSwipe);
         UpdateUI();
         AnimateUnroll();
     }
 
-    private void UpdateUI() => _paperCounterText.text = $"{_paperLength:F1}";
 
-    private void SavePaperLength()
+    private void UpdateUI()
     {
-        PlayerPrefs.SetFloat("PaperLength", _paperLength);
-        PlayerPrefs.Save();
+        _paperCounterText.text = $"{PaperCurrencyManager.Instance.PaperLength:F1}";
     }
-
-    private void LoadPaperLength() => _paperLength = PlayerPrefs.GetFloat("PaperLength", 0);
     #endregion
 }
