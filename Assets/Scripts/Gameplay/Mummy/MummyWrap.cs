@@ -11,7 +11,6 @@ public class MummyWrap : MonoBehaviour
     #region UI References
 
     [Header("UI Components")]
-    [Space]
     [SerializeField] private Button _mummyWrapButton;
     [SerializeField] private Image _mummyImage;
     [SerializeField] private TextMeshProUGUI _mummyWrapButtonText;
@@ -24,25 +23,30 @@ public class MummyWrap : MonoBehaviour
     #region Settings
 
     [Header("Wrap Settings")]
-    [Space]
     [SerializeField] private List<Color> _availableColors = new List<Color>();
     private static Color _lastMummyColor = Color.white;
 
     [SerializeField] private float _wrapDuration = 1f;
-    [SerializeField] private float _requiredPaper = 100f;
+    [SerializeField] private float _defaultRequiredPaper = 100f;
+    [SerializeField] private float _additionPaper = 50f;
+
+    private const string RequiredPaperKey = "RequiredPaperLength";
+    public static float RequiredPaper { get; private set; }
 
     #endregion
 
     #region Mummy Data
 
     [Header("Mummy Info")]
-    [Space]
     [SerializeField] private string _mummyName;
     public static event Action<string> OnMummyCreated;
 
     #endregion
 
-    #region Unity Methods
+    private void Awake()
+    {
+        LoadRequiredPaper();
+    }
 
     private void OnEnable()
     {
@@ -58,7 +62,6 @@ public class MummyWrap : MonoBehaviour
         if (PaperCurrencyManager.Instance != null)
         {
             PaperCurrencyManager.Instance.OnPaperChanged -= UpdateButtonUI;
-            UpdateButtonUI(PaperCurrencyManager.Instance.PaperLength);
         }
     }
 
@@ -66,27 +69,27 @@ public class MummyWrap : MonoBehaviour
     {
         _mummyWrapButton.gameObject.SetActive(true);
         _enterNamePanel.SetActive(false);
-
         UpdateButtonUI(PaperCurrencyManager.Instance.PaperLength);
     }
-
-    #endregion
-
-    #region Wrap Logic
 
     public void WrapMummy()
     {
         float currentPaper = PaperCurrencyManager.Instance.PaperLength;
 
-        if (currentPaper >= _requiredPaper)
+        if (currentPaper >= RequiredPaper)
         {
             _mummyImage.DOFillAmount(1f, _wrapDuration)
                 .SetEase(Ease.OutSine)
                 .OnComplete(() =>
                 {
-                    PaperCurrencyManager.Instance.AddPaper(-_requiredPaper);
+                    PaperCurrencyManager.Instance.AddPaper(-RequiredPaper);
 
                     AudioManager.Instance.PlayMummyWrappedSound();
+
+                    RequiredPaper += _additionPaper;
+                    SaveRequiredPaper();
+
+                    PaperCurrencyManager.Instance.ForceUpdateUI();
 
                     _mummyWrapButton.gameObject.SetActive(false);
                     _enterNamePanel.SetActive(true);
@@ -94,20 +97,15 @@ public class MummyWrap : MonoBehaviour
         }
         else
         {
-            float progress = Mathf.Clamp01(currentPaper / _requiredPaper);
+            float progress = Mathf.Clamp01(currentPaper / RequiredPaper);
             _mummyImage.DOFillAmount(progress, _wrapDuration).SetEase(Ease.OutSine);
         }
     }
 
     private void UpdateButtonUI(float currentPaper)
     {
-        _mummyWrapButtonText.text = $"Wrap\r\n{currentPaper:F1} meters";
+        _mummyWrapButtonText.text = $"Wrap\n{currentPaper:F1} meters";
     }
-
-    #endregion
-
-    #region Mummy Name Logic
-
 
     public void ConfirmNameInput()
     {
@@ -137,5 +135,22 @@ public class MummyWrap : MonoBehaviour
 
         OnMummyCreated?.Invoke(JsonUtility.ToJson(data));
     }
-    #endregion
+
+    private void SaveRequiredPaper()
+    {
+        PlayerPrefs.SetFloat(RequiredPaperKey, RequiredPaper);
+        PlayerPrefs.Save();
+    }
+
+    private void LoadRequiredPaper()
+    {
+        if (PlayerPrefs.HasKey(RequiredPaperKey))
+        {
+            RequiredPaper = PlayerPrefs.GetFloat(RequiredPaperKey);
+        }
+        else
+        {
+            RequiredPaper = _defaultRequiredPaper;
+        }
+    }
 }

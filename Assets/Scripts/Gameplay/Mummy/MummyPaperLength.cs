@@ -3,15 +3,7 @@ using UnityEngine;
 
 public class MummyPaperLength : MonoBehaviour
 {
-    #region UI References
-
-    [Header("UI Components")]
-    [SerializeField] private float _needPaper = 100f;
     [SerializeField] private TextMeshProUGUI _paperCount;
-
-    #endregion
-
-    #region Unity Methods
 
     private void OnEnable()
     {
@@ -27,7 +19,6 @@ public class MummyPaperLength : MonoBehaviour
         if (PaperCurrencyManager.Instance != null)
         {
             PaperCurrencyManager.Instance.OnPaperChanged -= UpdateUI;
-            UpdateUI(PaperCurrencyManager.Instance.PaperLength);
         }
     }
 
@@ -36,14 +27,8 @@ public class MummyPaperLength : MonoBehaviour
         UpdateUI(PaperCurrencyManager.Instance.PaperLength);
     }
 
-    #endregion
-
-    #region UI Update Logic
-
     private void UpdateUI(float currentPaper)
     {
-        _paperCount.text = $"{currentPaper:F1}/{_needPaper}";
+        _paperCount.text = $"{currentPaper:F1}/{MummyWrap.RequiredPaper:F1}";
     }
-
-    #endregion
 }

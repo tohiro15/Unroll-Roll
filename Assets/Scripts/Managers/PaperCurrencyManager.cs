@@ -49,6 +49,11 @@ public class PaperCurrencyManager : MonoBehaviour
         OnPaperChanged?.Invoke(PaperLength);
     }
 
+    public void ForceUpdateUI()
+    {
+        OnPaperChanged?.Invoke(PaperLength);
+    }
+
     private void SaveCurrency()
     {
         PlayerPrefs.SetFloat("PaperLength", PaperLength);
