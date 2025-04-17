@@ -3,7 +3,24 @@ using System.Collections.Generic;
 
 public class MenuManager : MonoBehaviour
 {
+    #region UI References
+
+    [Header("UI Components")]
     [SerializeField] private List<Canvas> _menus = new List<Canvas>();
+    [SerializeField] private int _defaultIndex = 0;
+
+    #endregion
+
+    #region Unity Methods
+
+    private void Start()
+    {
+        SetActiveMenu(_defaultIndex);
+    }
+
+    #endregion
+
+    #region Menu Management
 
     public void SetActiveMenu(int menuIndex)
     {
@@ -32,4 +49,6 @@ public class MenuManager : MonoBehaviour
         AudioManager.Instance.PlayButtonClick();
         _menus[menuIndex].gameObject.SetActive(!_menus[menuIndex].gameObject.activeSelf);
     }
+
+    #endregion
 }

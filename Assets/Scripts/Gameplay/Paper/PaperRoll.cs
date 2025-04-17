@@ -9,23 +9,31 @@ using System.Collections.Generic;
 public class PaperRoll : MonoBehaviour, IPointerDownHandler
 {
     #region Serialized Fields
+
+    [Header("Swipe Settings")]
     [SerializeField] private float _paperPerSwipe = 0.2f;
     [SerializeField] private float _minSwipeLength = 50f;
+
+    [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI _paperCounterText;
     [SerializeField] private RectTransform _interactionArea;
-    [SerializeField] private bool _development = false;
+
     [Header("Animation Unroll")]
     [SerializeField] private ScrollRect _scrollRect;
+
     #endregion
 
     #region Private Fields
+
     private Queue<GameObject> _activePapers = new Queue<GameObject>();
     private Vector2 _startTouchPosition;
     private bool _isDragging = false;
     private bool _swipeCounted = false;
+
     #endregion
 
     #region Unity Methods
+
     private void Start()
     {
         UpdateUI();
@@ -35,11 +43,12 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
     private void Update()
     {
         HandleTouchInput();
-        if (_development) HandleMouseInput();
     }
+
     #endregion
 
     #region Input Handling
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (IsPointerOverThisOrChildren(eventData))
@@ -60,12 +69,6 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
         }
     }
 
-    private void HandleMouseInput()
-    {
-        if (Input.GetMouseButtonUp(0)) ProcessSwipe();
-        else if (_isDragging && Input.GetMouseButton(0) && !_swipeCounted) CheckSwipe((Vector2)Input.mousePosition);
-    }
-
     private void CheckSwipe(Vector2 currentPosition)
     {
         if (!_swipeCounted && (currentPosition - _startTouchPosition).y < -_minSwipeLength)
@@ -81,9 +84,11 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
         }
         _isDragging = false;
     }
+
     #endregion
 
     #region Paper Management
+
     private void AnimateUnroll()
     {
         GameObject paperGO;
@@ -123,9 +128,11 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
         }
         _scrollRect.verticalNormalizedPosition = 0f;
     }
+
     #endregion
 
     #region Utility Methods
+
     private bool IsPointerOverThisOrChildren(PointerEventData eventData)
     {
         var results = new List<RaycastResult>();
@@ -146,10 +153,10 @@ public class PaperRoll : MonoBehaviour, IPointerDownHandler
         AnimateUnroll();
     }
 
-
     private void UpdateUI()
     {
         _paperCounterText.text = $"{PaperCurrencyManager.Instance.PaperLength:F1}";
     }
+
     #endregion
 }

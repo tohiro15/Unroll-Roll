@@ -3,11 +3,21 @@ using System;
 
 public class PaperCurrencyManager : MonoBehaviour
 {
+    #region Singleton
+
     public static PaperCurrencyManager Instance { get; private set; }
+
+    #endregion
+
+    #region Properties
 
     public float PaperLength { get; private set; }
 
     public event Action<float> OnPaperChanged;
+
+    #endregion
+
+    #region Unity Methods
 
     private void Awake()
     {
@@ -21,13 +31,16 @@ public class PaperCurrencyManager : MonoBehaviour
         LoadCurrency();
     }
 
+    #endregion
+
+    #region Currency Management
+
     public void AddPaper(float amount)
     {
         PaperLength += amount;
         SaveCurrency();
         OnPaperChanged?.Invoke(PaperLength);
     }
-
 
     public void SetPaper(float amount)
     {
@@ -46,4 +59,6 @@ public class PaperCurrencyManager : MonoBehaviour
     {
         PaperLength = PlayerPrefs.GetFloat("PaperLength", 0);
     }
+
+    #endregion
 }

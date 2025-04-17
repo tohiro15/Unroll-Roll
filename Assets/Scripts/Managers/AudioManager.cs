@@ -14,6 +14,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource _sfxSource;
     [SerializeField] private AudioClip _buttonClickSound;
     [SerializeField] private AudioClip _unrollSound;
+    [SerializeField] private AudioClip _mummyWrappedSound;
 
     [Range(0f, 1f)] public float sfxVolume = 0.7f;
 
@@ -77,6 +78,12 @@ public class AudioManager : MonoBehaviour
     {
         if (_unrollSound == null) return;
         _sfxSource.PlayOneShot(_unrollSound);
+    }
+
+    public void PlayMummyWrappedSound()
+    {
+        if (_unrollSound == null) return;
+        _sfxSource.PlayOneShot(_mummyWrappedSound);
     }
     #endregion
 }

@@ -4,18 +4,24 @@ using UnityEngine;
 public class PaperPool : MonoBehaviour
 {
     #region Serialized Fields
+
+    [Header("Pool Settings")]
     [SerializeField] private GameObject _paperPrefab;
     [SerializeField] private RectTransform _contentArea;
     [SerializeField] private int _initialSize = 5;
+
     #endregion
 
     #region Private Fields
+
     private Queue<GameObject> _pool = new Queue<GameObject>();
     public static PaperPool Instance { get; private set; }
-    public int InitialSize => _initialSize;  // Доступ к _initialSize
+    public int InitialSize => _initialSize;
+
     #endregion
 
     #region Unity Methods
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -29,9 +35,11 @@ public class PaperPool : MonoBehaviour
         for (int i = 0; i < _initialSize; i++)
             AddNewObjectToPool();
     }
+
     #endregion
 
     #region Pool Management
+
     private GameObject AddNewObjectToPool()
     {
         GameObject obj = Instantiate(_paperPrefab, _contentArea);
@@ -55,5 +63,6 @@ public class PaperPool : MonoBehaviour
         obj.SetActive(false);
         _pool.Enqueue(obj);
     }
+
     #endregion
 }
